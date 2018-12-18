@@ -19,7 +19,7 @@ model_dir=$main_dir/model
 
 # number of merge operations. Network vocabulary should be slightly larger (to include characters),
 # or smaller if the operations are learned on the joint vocabulary
-bpe_operations=90000
+bpe_operations=40000
 
 #minimum number of times we need to have seen a character sequence in the training text before we merge it into one unit
 #this is applied to each training text independently, even with joint BPE
@@ -70,6 +70,10 @@ for prefix in corpus newstest2013 newstest2014 newstest2015 newstest2016 newstes
   $bpe_scripts/apply_bpe.py -c $model_dir/$src$trg.bpe --vocabulary $data_dir/vocab.$trg --vocabulary-threshold $bpe_threshold < $data_dir/$prefix.tc.$trg > $data_dir/$prefix.bpe.$trg
  done
 
-# build network dictionary
+# build network dictionaries for separate source / target vocabularies
 $nematus_home/data/build_dictionary.py $data_dir/corpus.bpe.$src $data_dir/corpus.bpe.$trg
 
+# build network dictionary for combined source + target vocabulary (for use
+# with tied encoder-decoder embeddings)
+cat $data_dir/corpus.bpe.$src $data_dir/corpus.bpe.$trg > $data_dir/corpus.bpe.both
+$nematus_home/data/build_dictionary.py $data_dir/corpus.bpe.both

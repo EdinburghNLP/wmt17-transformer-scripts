@@ -16,20 +16,24 @@ working_dir=$main_dir/model
 #language-dependent variables (source and target language)
 . $main_dir/vars
 
+# TensorFlow devices; change this to control the GPUs used by Nematus.
+# It should be a list of GPU identifiers. For example, '1' or '0,1,3'
+# Currently translate.py only uses a single GPU so there is no point
+# assigning more than one.
+devices=0
+
 test_prefix=newstest2017
 test=$test_prefix.bpe.$src
 ref=$test_prefix.$trg
-model=$working_dir/model.npz.best_bleu
-
+model=$working_dir/model.best-valid-script
 
 # decode
-
-# for new Tensorflow backend, use a command like this:
-# CUDA_VISIBLE_DEVICES=$device python $nematus_home/nematus/translate.py \
-
-THEANO_FLAGS=mode=FAST_RUN,floatX=float32,device=$device,gpuarray.preallocate=0.1 time python $nematus_home/nematus/translate.py \
+CUDA_VISIBLE_DEVICES=$devices python $nematus_home/nematus/translate.py \
      -m $model \
-     -i $data_dir/$test -o $working_dir/$test.output.dev -k 12 -n -p 1 --suppress-unk
+     -i $data_dir/$test \
+     -o $working_dir/$test.output.dev \
+     -k 12 \
+     -n
 
 # postprocess
 $script_dir/postprocess.sh < $working_dir/$test.output.dev > $working_dir/$test.output.postprocessed.dev

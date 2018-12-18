@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Distributed under MIT license
 
 script_dir=`dirname $0`
@@ -6,34 +6,59 @@ main_dir=$script_dir/../
 data_dir=$main_dir/data
 working_dir=$main_dir/model
 
-#language-independent variables (toolkit locations)
+# Language-independent variables (toolkit locations).
 . $main_dir/../vars
 
-#language-dependent variables (source and target language)
+# Language-dependent variables (source and target language).
 . $main_dir/vars
 
-# for new Tensorflow backend, use a command like this:
-# CUDA_VISIBLE_DEVICES=$device python $nematus_home/nematus/nmt.py \
+# TensorFlow devices; change this to control the GPUs used by Nematus.
+# It should be a list of GPU identifiers. For example, '1' or '0,1,3'
+devices=0,1,2,3
 
-THEANO_FLAGS=mode=FAST_RUN,floatX=float32,device=$device,gpuarray.preallocate=0.8 python $nematus_home/nematus/nmt.py \
-    --model $working_dir/model.npz \
-    --datasets $data_dir/corpus.bpe.$src $data_dir/corpus.bpe.$trg \
-    --valid_datasets $data_dir/newstest2013.bpe.$src $data_dir/newstest2013.bpe.$trg \
-    --dictionaries $data_dir/corpus.bpe.$src.json $data_dir/corpus.bpe.$trg.json \
-    --external_validation_script $script_dir/validate.sh \
-    --dim_word 512 \
-    --dim 1024 \
-    --lrate 0.0001 \
-    --optimizer adam \
-    --maxlen 50 \
-    --batch_size 80 \
-    --valid_batch_size 40 \
-    --validFreq 10000 \
-    --dispFreq 1000 \
-    --saveFreq 30000 \
-    --sampleFreq 10000 \
+# Training command that closely follows the 'base' configuration from the
+# paper
+#
+#  "Attention is All you Need" in Advances in Neural Information Processing
+#  Systems 30, 2017. Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob
+#  Uszkoreit, Llion Jones, Aidan N Gomez, Lukadz Kaiser, and Illia Polosukhin.
+#
+# Depending on the size and number of available GPUs, you may need to adjust
+# the token_batch_size parameter. The command used here was tested on a
+# machine with four 12 GB GPUS.
+CUDA_VISIBLE_DEVICES=$devices python $nematus_home/nematus/train.py \
+    --source_dataset $data_dir/corpus.bpe.$src \
+    --target_dataset $data_dir/corpus.bpe.$trg \
+    --dictionaries $data_dir/corpus.bpe.both.json \
+                   $data_dir/corpus.bpe.both.json \
+    --save_freq 30000 \
+    --model $working_dir/model \
+    --reload latest_checkpoint \
+    --model_type transformer \
+    --embedding_size 512 \
+    --state_size 512 \
+    --tie_encoder_decoder_embeddings \
     --tie_decoder_embeddings \
-    --layer_normalisation \
-    --dec_base_recurrence_transition_depth 8 \
-    --enc_recurrence_transition_depth 4
-
+    --loss_function per-token-cross-entropy \
+    --clip_c 0.0 \
+    --label_smoothing 0.1 \
+    --optimizer adam \
+    --adam_beta1 0.9 \
+    --adam_beta2 0.98 \
+    --adam_epsilon 1e-09 \
+    --learning_schedule transformer \
+    --warmup_steps 4000 \
+    --maxlen 100 \
+    --batch_size 256 \
+    --token_batch_size 16384 \
+    --valid_source_dataset $data_dir/newstest2013.bpe.$src \
+    --valid_target_dataset $data_dir/newstest2013.bpe.$trg \
+    --valid_batch_size 120 \
+    --valid_token_batch_size 4096 \
+    --valid_freq 10000 \
+    --valid_script $script_dir/validate.sh \
+    --disp_freq 1000 \
+    --sample_freq 0 \
+    --beam_freq 0 \
+    --beam_size 4 \
+    --translation_maxlen 100
