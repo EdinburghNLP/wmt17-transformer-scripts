@@ -1,7 +1,0 @@
-AddHandler markdown .md
-AddType text/html .md
-ReadmeName README.md
-HeaderName HEADER.md
-IndexIgnore *.md README
-# DirectoryIndex README.md
-# MarkdownCss markdown.css

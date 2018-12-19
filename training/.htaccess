@@ -1,4 +1,0 @@
-AddHandler markdown .md
-AddType text/html .md
-ReadmeName README.md
-IndexIgnore *.md README

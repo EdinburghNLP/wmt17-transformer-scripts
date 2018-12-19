@@ -4,7 +4,7 @@
 This is a fork of https://github.com/EdinburghNLP/wmt17-scripts that
 demonstrates training of Nematus models with a Transformer architecture.
 
-`scripts/train.sh` shows a configuration corresponding to training a Transformer-base model.
+`training/scripts/train.sh` shows a configuration corresponding to training a Transformer-base model.
 
 Scripts for preprocessing, validation, and evaluation, are also provided, and mirror the WMT17 setup
 of the University of Edinburgh (with minor tweaks, e.g. reducing the BPE vocabulary size).
@@ -21,10 +21,10 @@ The models use the following software:
 Please set the appropriate paths in the 'training/vars' file.
 
 
-USAGE INSTRUCTIONS: TRAINING SCRIPTS
+USAGE INSTRUCTIONS
 ------------------------------------
 
-For training your own models, follow the instructions in `training/README.md`
+For training, follow the instructions in `training/README.md`
 
 LICENSE
 -------
