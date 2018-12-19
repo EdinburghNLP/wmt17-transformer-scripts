@@ -10,10 +10,7 @@ main_dir=$script_dir/../
 data_dir=$main_dir/data
 working_dir=$main_dir/model
 
-#language-independent variables (toolkit locations)
-. $main_dir/../vars
-
-#language-dependent variables (source and target language)
+# variables (toolkits; source and target language)
 . $main_dir/vars
 
 # TensorFlow devices; change this to control the GPUs used by Nematus.

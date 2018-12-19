@@ -6,25 +6,21 @@ and data augmentation for monolingual data for different
 languages. Check the system description for more detail.
 
 In this directory, we provide a sample configuration for
-preprocessing and training for English->German. Please note
-that this script will not reproduce our WMT17 results, which also
+preprocessing and training for English->German. It is different
+from our WMT17 submission in some aspect, most importantly using
+the Transformer-base architecture instead of an RNN.
+
+Note that our WMT17 submission uses also
 rely on the use of back-translated monolingual data, and
 combination of multiple models. Please also have a look at last year's
 accompanying scripts and sample configurations; among others,
 there is documentation for right-to-left reranking:
 https://github.com/rsennrich/wmt16-scripts
 
-Note: since the WMT17 models were developed, Nematus has switched
-from using a Theano back-end to using TensorFlow. The scripts provided in
-the ```scripts``` directory are for use with the Theano version; updated
-scripts for use with the current TensorFlow version can be found in
-```scripts.tensorflow```.
-
-
 USAGE INSTRUCTIONS
 ------------------
 
-1. ensure that all requirements are present, and that the path names in the ‘vars’ file (and in `../vars`) are up-to-date. If you want to train on GPUs, you should also update the ‘device’ variable in that file.
+1. ensure that all requirements are present, and that the path names in the ‘vars’ file are up-to-date. If you want to train on GPUs, you should also update the ‘device’ variable in that file.
 
 2. download sample files (WMT17 parallel training data, dev and test sets):
 

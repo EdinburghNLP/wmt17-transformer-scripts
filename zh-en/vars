@@ -1,5 +1,0 @@
-src=zh
-trg=en
-jieba_home=/mnt/baldur0/tramooc/tools/jieba
-nematus_home=/home/bhaddow/code/nematus/github
-device=cuda1

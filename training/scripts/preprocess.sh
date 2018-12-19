@@ -11,10 +11,7 @@ main_dir=$script_dir/..
 data_dir=$main_dir/data
 model_dir=$main_dir/model
 
-#language-independent variables (toolkit locations)
-. $main_dir/../vars
-
-#language-dependent variables (source and target language)
+# variables (toolkits; source and target language)
 . $main_dir/vars
 
 # number of merge operations. Network vocabulary should be slightly larger (to include characters),

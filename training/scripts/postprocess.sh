@@ -8,10 +8,7 @@
 script_dir=`dirname $0`
 main_dir=$script_dir/../
 
-#language-independent variables (toolkit locations)
-. $main_dir/../vars
-
-#language-dependent variables (source and target language)
+# variables (toolkits; source and target language)
 . $main_dir/vars
 
 sed -r 's/\@\@ //g' |
