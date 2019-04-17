@@ -11,7 +11,7 @@ main_dir=$script_dir/../
 data_dir=$main_dir/data
 
 #language-independent variables (toolkit locations)
-. $main_dir/../vars
+. $main_dir/vars
 
 #language-dependent variables (source and target language)
 . $main_dir/vars

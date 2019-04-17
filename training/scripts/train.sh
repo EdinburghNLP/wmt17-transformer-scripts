@@ -23,7 +23,7 @@ devices=0,1,2,3
 # Depending on the size and number of available GPUs, you may need to adjust
 # the token_batch_size parameter. The command used here was tested on a
 # machine with four 12 GB GPUS.
-CUDA_VISIBLE_DEVICES=$devices python $nematus_home/nematus/train.py \
+CUDA_VISIBLE_DEVICES=$devices python3 $nematus_home/nematus/train.py \
     --source_dataset $data_dir/corpus.bpe.$src \
     --target_dataset $data_dir/corpus.bpe.$trg \
     --dictionaries $data_dir/corpus.bpe.both.json \
