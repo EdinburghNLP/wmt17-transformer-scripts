@@ -25,15 +25,24 @@ ref=$test_prefix.$trg
 model=$working_dir/model.best-valid-script
 
 # decode
-CUDA_VISIBLE_DEVICES=$devices python $nematus_home/nematus/translate.py \
+CUDA_VISIBLE_DEVICES=$devices python3 $nematus_home/nematus/translate.py \
      -m $model \
      -i $data_dir/$test \
      -o $working_dir/$test.output.dev \
      -k 12 \
-     -n
+     -n 0.6 \
+     -b 10
 
 # postprocess
 $script_dir/postprocess.sh < $working_dir/$test.output.dev > $working_dir/$test.output.postprocessed.dev
 
+# postprocess (no detokenization)
+$script_dir/postprocess_tokenized.sh < $working_dir/$test.output.dev > $working_dir/$test.output.tokenized.dev
+
 # evaluate with detokenized BLEU (same as mteval-v13a.pl)
+echo "$test_prefix (detokenized BLEU)"
 $nematus_home/data/multi-bleu-detok.perl $data_dir/$ref < $working_dir/$test.output.postprocessed.dev
+
+# evaluate with tokenized BLEU
+echo "$test_prefix (tokenized BLEU)"
+$nematus_home/data/multi-bleu.perl $data_dir/$test_prefix.tok.$trg < $working_dir/$test.output.tokenized.dev
