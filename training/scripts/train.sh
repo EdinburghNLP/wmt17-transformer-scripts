@@ -38,6 +38,7 @@ CUDA_VISIBLE_DEVICES=$devices python3 $nematus_home/nematus/train.py \
     --tie_decoder_embeddings \
     --loss_function per-token-cross-entropy \
     --label_smoothing 0.1 \
+    --exponential_smoothing 0.0001 \
     --optimizer adam \
     --adam_beta1 0.9 \
     --adam_beta2 0.98 \
